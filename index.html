@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Səfər Xərclərinin Bölünməsi</title>
+    <style>
+        :root {
+            --bg-body: #0b1120;
+            --bg-card: #151f32;
+            --bg-input: #1e293b;
+            --border: #334155;
+            --primary: #06b6d4;
+            --primary-hover: #0891b2;
+            --success: #10b981;
+            --danger: #f43f5e;
+            --warning: #f59e0b;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 760px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 22px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .currency-box select {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .friend-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .friend-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 38px;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-del {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-sub);
+            border-radius: 8px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-del:hover {
+            color: var(--danger);
+            border-color: var(--danger);
+            background: rgba(244, 63, 94, 0.1);
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .btn-add {
+            background: var(--bg-input);
+            border: 1px dashed var(--border);
+            color: var(--primary);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .btn-add:hover {
+            background: rgba(6, 182, 212, 0.1);
+            border-color: var(--primary);
+        }
+
+        .btn-calc {
+            background: var(--primary);
+            color: #041017;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            flex: 2;
+            transition: 0.2s;
+        }
+
+        .btn-calc:hover {
+            background: var(--primary-hover);
+        }
+
+        .summary-banner {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .progress-container {
+            margin-bottom: 24px;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: var(--bg-input);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            transition: width 0.3s ease;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+
+        th, td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        th {
+            color: var(--text-sub);
+            background: #0f172a;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .btn-copy {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-copy:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .settlement-card {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--warning);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+
+        .settlement-card.paid {
+            border-left-color: var(--success);
+            opacity: 0.7;
+        }
+
+        .settlement-card.paid .settlement-text {
+            text-decoration: line-through;
+            color: var(--text-sub);
+        }
+
+        .btn-status {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-status.paid {
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--success);
+            color: #041017;
+            font-weight: bold;
+            padding: 10px 18px;
+            border-radius: 8px;
+            display: none;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <div>
+            <h1>Səfər Xərclərinin Hesablanması</h1>
+            <p style="color: var(--text-sub); font-size: 13px; margin-top: 4px;">Xərcləri daxil edin və minimum köçürmə ilə balansı sıfırlayın.</p>
+        </div>
+        <div class="currency-box">
+            <select id="currency-select" onchange="changeCurrency()">
+                <option value="AZN">AZN (₼)</option>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="TRY">TRY (₺)</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 5 Dostun siyahısı -->
+    <div id="friend-list" class="friend-list"></div>
+
+    <div class="action-row">
+        <button class="btn-add" onclick="addFriend()">+ Dost Əlavə Et</button>
+        <button class="btn-calc" onclick="calculate()">Hesabla və Balansı Göstər</button>
+    </div>
+
+    <div id="result-section" style="display: none;">
+        <div class="summary-banner" id="summary-banner"></div>
+
+        <div class="progress-container">
+            <div class="progress-header">
+                <span>Ödəniş Vəziyyəti</span>
+                <span id="progress-text">0 / 0 ödənildi (0%)</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-bottom: 8px;">Şəxsi Balanslar</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ad</th>
+                    <th>Xərclədiyi</th>
+                    <th>Balans</th>
+                </tr>
+            </thead>
+            <tbody id="balance-table"></tbody>
+        </table>
+
+        <div class="section-header">
+            <div class="section-title">Kimin Kimə Nə Qədər Ödəyəcəyi:</div>
+            <button class="btn-copy" onclick="copyResults()">📋 Nəticəni Kopyala</button>
+        </div>
+        <div id="settlements-list"></div>
+    </div>
+</div>
+
+<div id="toast" class="toast">Kopyalandı!</div>
+
+<script>
+    const CURRENCY_SYMBOLS = {
+        AZN: "₼",
+        USD: "$",
+        EUR: "€",
+        TRY: "₺"
+    };
+
+    let friends = [
+        { id: 1, name: "Əli", paid: 28 },
+        { id: 2, name: "Murad", paid: 56 },
+        { id: 3, name: "Leyla", paid: 48 },
+        { id: 4, name: "Rəşad", paid: 84 },
+        { id: 5, name: "Aysel", paid: 23 }
+    ];
+
+    let settlements = [];
+    let currentCurrency = "AZN";
+
+    function getSymbol() {
+        return CURRENCY_SYMBOLS[currentCurrency] || currentCurrency;
+    }
+
+    function renderFriendInputs() {
+        const list = document.getElementById("friend-list");
+        list.innerHTML = "";
+
+        friends.forEach((f, idx) => {
+            const row = document.createElement("div");
+            row.className = "friend-row";
+            row.innerHTML = `
+                <input type="text" value="${escapeHtml(f.name)}" placeholder="Ad" oninput="updateName(${idx}, this.value)">
+                <input type="number" step="0.01" min="0" value="${f.paid}" placeholder="Xərc" oninput="updatePaid(${idx}, this.value)">
+                <button class="btn-del" title="Sil" onclick="deleteFriend(${idx})">&times;</button>
+            `;
+            list.appendChild(row);
+        });
+    }
+
+    function updateName(idx, val) {
+        friends[idx].name = val.trim() || `Dost ${idx + 1}`;
+    }
+
+    function updatePaid(idx, val) {
+        friends[idx].paid = parseFloat(val) || 0;
+    }
+
+    function addFriend() {
+        friends.push({
+            id: Date.now(),
+            name: `Dost ${friends.length + 1}`,
+            paid: 0
+        });
+        renderFriendInputs();
+    }
+
+    function deleteFriend(idx) {
+        if (friends.length <= 2) {
+            alert("Ən azı 2 nəfər qalmalıdır!");
+            return;
+        }
+        friends.splice(idx, 1);
+        renderFriendInputs();
+        calculate();
+    }
+
+    function changeCurrency() {
+        currentCurrency = document.getElementById("currency-select").value;
+        if (document.getElementById("result-section").style.display === "block") {
+            calculate();
+        }
+    }
+
+    function calculate() {
+        const n = friends.length;
+        if (n < 2) return;
+
+        let total = 0;
+        friends.forEach(f => total += (parseFloat(f.paid) || 0));
+
+        const share = total / n;
+        const sym = getSymbol();
+
+        document.getElementById("summary-banner").innerHTML = `
+            <span><strong>Ümumi Xərc:</strong> ${total.toFixed(2)} ${sym}</span>
+            <span><strong>Adam Başına:</strong> ${share.toFixed(2)} ${sym}</span>
+        `;
+
+        // Balans cədvəli
+        const tbody = document.getElementById("balance-table");
+        tbody.innerHTML = "";
+
+        let debtors = [];
+        let creditors = [];
+
+        friends.forEach(f => {
+            const bal = (parseFloat(f.paid) || 0) - share;
+            const isPos = bal > 0.009;
+            const isNeg = bal < -0.009;
+
+            const color = isPos ? "var(--success)" : (isNeg ? "var(--danger)" : "var(--text-sub)");
+            const sign = isPos ? "+" : "";
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td><strong>${escapeHtml(f.name)}</strong></td>
+                <td>${(parseFloat(f.paid) || 0).toFixed(2)} ${sym}</td>
+                <td style="color: ${color}; font-weight: bold;">${sign}${bal.toFixed(2)} ${sym}</td>
+            `;
+            tbody.appendChild(tr);
+
+            if (bal < -0.009) {
+                debtors.push({ name: f.name, amount: -bal });
+            } else if (bal > 0.009) {
+                creditors.push({ name: f.name, amount: bal });
+            }
+        });
+
+        // Splitwise minimal transfer alqoritmi
+        settlements = [];
+        let d = 0, c = 0;
+
+        while (d < debtors.length && c < creditors.length) {
+            let amount = Math.min(debtors[d].amount, creditors[c].amount);
+            if (amount > 0.009) {
+                settlements.push({
+                    from: debtors[d].name,
+                    to: creditors[c].name,
+                    amount: amount,
+                    paid: false
+                });
+            }
+
+            debtors[d].amount -= amount;
+            creditors[c].amount -= amount;
+
+            if (debtors[d].amount < 0.01) d++;
+            if (creditors[c].amount < 0.01) c++;
+        }
+
+        renderSettlements();
+        updateProgress();
+        document.getElementById("result-section").style.display = "block";
+    }
+
+    function renderSettlements() {
+        const container = document.getElementById("settlements-list");
+        container.innerHTML = "";
+        const sym = getSymbol();
+
+        if (settlements.length === 0) {
+            container.innerHTML = `<div style="color: var(--success); padding: 10px;">Hamı bərabər ödəyib, heç kimin borcu yoxdur.</div>`;
+            return;
+        }
+
+        settlements.forEach((s, idx) => {
+            const card = document.createElement("div");
+            card.className = `settlement-card ${s.paid ? 'paid' : ''}`;
+            card.innerHTML = `
+                <div class="settlement-text">
+                    <strong>${escapeHtml(s.from)}</strong> &rarr; <strong>${escapeHtml(s.to)}</strong>: 
+                    <strong style="color: var(--primary);">${s.amount.toFixed(2)} ${sym}</strong>
+                </div>
+                <button class="btn-status ${s.paid ? 'paid' : ''}" onclick="toggleStatus(${idx})">
+                    ${s.paid ? '✓ Ödənildi' : 'Gözləyir'}
+                </button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function toggleStatus(idx) {
+        settlements[idx].paid = !settlements[idx].paid;
+        renderSettlements();
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const total = settlements.length;
+        if (total === 0) {
+            document.getElementById("progress-bar").style.width = "100%";
+            document.getElementById("progress-text").innerText = "100% Tamamlandı";
+            return;
+        }
+
+        const paidCount = settlements.filter(s => s.paid).length;
+        const pct = Math.round((paidCount / total) * 100);
+
+        document.getElementById("progress-bar").style.width = `${pct}%`;
+        document.getElementById("progress-text").innerText = `${paidCount} / ${total} ödənildi (${pct}%)`;
+    }
+
+    function copyResults() {
+        if (settlements.length === 0) return;
+        const sym = getSymbol();
+
+        let txt = `🏕️ *Səfər Xərcləri Hesabatı*\n\n`;
+        settlements.forEach(s => {
+            const st = s.paid ? "✅ [Ödənildi]" : "⏳ [Gözləyir]";
+            txt += `• ${s.from} ➔ ${s.to}: ${s.amount.toFixed(2)} ${sym} ${st}\n`;
+        });
+
+        const temp = document.createElement("textarea");
+        temp.value = txt;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+        setTimeout(() => toast.style.display = "none", 2000);
+    }
+
+    function escapeHtml(str) {
+        return String(str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // Açılan kimi 5 dostu ekrana çıxarır və ilkin hesablamanı edir
+    window.onload = function () {
+        renderFriendInputs();
+        calculate();
+    };
+</script>
+</body>
+</html>
